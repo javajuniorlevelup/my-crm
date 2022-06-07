@@ -48,6 +48,7 @@
             <h2>Новый контакт</h2>
             <div class="container">
                 <form method="post" th:object="${contactDto}">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                     <div class="row mb-3">
                         <label for="inputLastname" class="col-sm-2 col-form-label">Фамилия</label>
                         <div class="col-sm-4">

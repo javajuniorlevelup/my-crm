@@ -36,4 +36,8 @@ public class Contact {
     @JoinColumn(name = "company_id")
     private Company company;
 
+    @ManyToOne
+    @JoinColumn(name = "created_by")
+    private User createdBy;
+
 }

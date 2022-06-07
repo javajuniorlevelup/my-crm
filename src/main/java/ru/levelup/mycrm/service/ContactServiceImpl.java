@@ -3,10 +3,15 @@ package ru.levelup.mycrm.service;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.util.Streamable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.levelup.mycrm.model.Contact;
+import ru.levelup.mycrm.model.User;
 import ru.levelup.mycrm.model.dto.ContactDto;
 import ru.levelup.mycrm.repo.ContactRepo;
+import ru.levelup.mycrm.repo.UsersRepo;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +22,7 @@ public class ContactServiceImpl implements ContactService {
 
     private final ContactRepo contactRepo;
     private final ModelMapper modelMapper;
+    private final UsersRepo usersRepo;
 
     @Override
     public Optional<ContactDto> findById(Long id) {
@@ -30,15 +36,24 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public Long save(ContactDto contactDto) {
-        Contact contact = new Contact();
-        contact.setFirstName(contactDto.getFirstname());
-        contact.setLastName(contactDto.getLastname());
-        contact.setMiddleName(contactDto.getMiddlename());
-        contact.setPhone(contactDto.getPhone());
-        contact.setEmail(contactDto.getEmail());
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = ((UserDetails)auth.getPrincipal()).getUsername();
+        Optional<User> currentUser = usersRepo.findByEmail(email);
 
-        contact = contactRepo.save(contact);
-        return contact.getId();
+        long id = currentUser.map(user -> {
+            Contact contact = new Contact();
+            contact.setFirstName(contactDto.getFirstname());
+            contact.setLastName(contactDto.getLastname());
+            contact.setMiddleName(contactDto.getMiddlename());
+            contact.setPhone(contactDto.getPhone());
+            contact.setEmail(contactDto.getEmail());
+            contact.setCreatedBy(user);
+
+            contact = contactRepo.save(contact);
+            return contact.getId();
+        }).orElseThrow(() -> new UsernameNotFoundException(email));
+
+        return id;
     }
 
     private ContactDto map(Contact contact) {

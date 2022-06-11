@@ -47,7 +47,7 @@ public class ContactServiceImpl implements ContactService {
             contact.setMiddleName(contactDto.getMiddlename());
             contact.setPhone(contactDto.getPhone());
             contact.setEmail(contactDto.getEmail());
-            contact.setCreatedBy(user);
+//            contact.setCreatedBy(user);
 
             contact = contactRepo.save(contact);
             return contact.getId();

@@ -24,7 +24,7 @@ public class ContactsControllerUnitTest {
 
     @BeforeEach
     public void setup() {
-        subject = new ContactsController(contactService);
+//        subject = new ContactsController(contactService);
     }
 
     @Test

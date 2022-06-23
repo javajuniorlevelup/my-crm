@@ -9,4 +9,6 @@ public interface ContactService {
     Optional<ContactDto> findById(Long id);
     List<ContactDto> findAll();
     Long save(ContactDto contactDto);
+
+    List<ContactDto> findByQuery(String query);
 }

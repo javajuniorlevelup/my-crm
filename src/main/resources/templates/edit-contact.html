@@ -84,19 +84,22 @@
                             <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Not valid</span>
                         </div>
                     </div>
-                    <!--<fieldset class="row mb-3">
+                    <fieldset class="row mb-3">
                         <legend class="col-form-label col-sm-2 pt-0">Компания</legend>
                         <div class="col-sm-4">
-                            <select th:field="*{company}" class="form-select mb-3" aria-label=".form-select-lg example">
+                            <select th:field="*{companyId}" class="form-select mb-3" aria-label=".form-select-lg example">
+                                <option th:value="-1">-- Новая компания --</option>
+                                ></option>
                                 <option th:each="company : ${companies}"
                                         th:value="${company.id}"
                                         th:text="${company.name}"
                                 ></option>
                             </select>
-                            <input type="text" name="newCompany" class="form-control">
-
+                            <span th:if="${#fields.hasErrors('companyId')}" th:errors="*{companyId}">Not valid</span>
+                            <input type="text" class="form-control" th:field="*{companyName}">
+                            <span th:if="${#fields.hasErrors('companyName')}" th:errors="*{companyName}">Not valid</span>
                         </div>
-                    </fieldset>-->
+                    </fieldset>
 
                     <button type="submit" class="btn btn-primary">Сохранить</button>
                 </form>

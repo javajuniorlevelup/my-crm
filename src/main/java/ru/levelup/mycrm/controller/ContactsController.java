@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.levelup.mycrm.exc.ContactNotFoundException;
 import ru.levelup.mycrm.model.dto.ContactDto;
+import ru.levelup.mycrm.service.CompaniesService;
 import ru.levelup.mycrm.service.ContactService;
 
 import javax.validation.Valid;
@@ -22,6 +23,7 @@ import java.util.List;
 public class ContactsController {
 
     private final ContactService contactService;
+    private final CompaniesService companiesService;
 
     @GetMapping
     public String index(Model model) {
@@ -32,7 +34,8 @@ public class ContactsController {
     }
 
     @GetMapping("/new")
-    public String newContact(ContactDto contactDto) {
+    public String newContact(ContactDto contactDto, Model model) {
+        model.addAttribute("companies", companiesService.findAll());
         return "edit-contact";
     }
 
@@ -49,6 +52,7 @@ public class ContactsController {
     public String editContact(@PathVariable("id") Long id, Model model) {
         ContactDto dto = contactService.findById(id).orElseThrow(() -> new ContactNotFoundException(id));
         model.addAttribute("contactDto", dto);
+        model.addAttribute("companies", companiesService.findAll());
 
         return "edit-contact";
     }
